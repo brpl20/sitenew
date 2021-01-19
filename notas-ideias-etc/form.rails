@@ -1,15 +1,19 @@
+:before submit:
+(Colocar em todos para finalizar pelo menos o telefone como obrigatório)
 
-[Meu Processo]
 
-[Consulta]
 
-[Saiba-Mais]
+
 
   <% :novo_processo,  msg: 'Por Favor Digite seu nome completo:',                                         %>
   <% :telefone,       msg: 'Por Favor Digite seu telefone:',      error: "O telefone é obrigatório"       %>
 
+
+
 [Novo Processo]
-  <% collection: [Previdenciário] [Administrativo] [Cível] [Tributário] [Asfalto] [Outros] %>
+
+  <% collection: [Previdenciário] [Administrativo] [Cível] [Tributário] [Outros] %>
+
 
   [Previdenciário]
 
@@ -39,130 +43,137 @@
 
       3.1 <% questão: "Você já possui advogado?", selection: [Sim] [Não] %>
           [Sim]
+            <% "Para a consulta de processos com advogado já contratado, ou processos já finalizados, cobramos um valor de R$ 400,00 para consulta e parecer, gostaria de continuar?", selection: [Sim] [Não] %>
 
+              [Sim] => [Pagamento] <% questão: "Obrigado pelas informações, você pode nos enviar o número do processo ou algum documento que gostaria de nos enviar? Ex. cópia de requerimento, contagem de contribuição, certidão de tempo de contribuição, cópia de processo etc", selection: [Sim] [Não] %>
 
-          [Não]
-           Obrigado
+                [Sim] => [upload-form + fill_form (número do processo)] [câmera] => [Submit] <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
 
- <% questão: "Já fez algum requerimento no INSS?" %>
-      [Sim] [Não]
+                [Não]:
 
+              if [Auxilio Doença]
+                 <% questão: "Descreva um pouco mais sobre a sua incapacidade ou doença:", selection: [Sim] [Não] %>
 
+              if [Pensão Por Morte]
+                 <% questão: "O Falecido estava trabalhando ou estava aposentado?:", selection: [Sim] [Não] %>
 
+              if [Salário Maternidade]
+                 <% questão: "Teve trabalho registrado antes do parto ou contribuiu para o INSS em até dois anos antes?", selection: [Sim] [Não] %>
 
+              if [Outros]
+                 <% questão: "Descreva um pouco mais sobre situação pretendida:", selection: ____ %>
 
-  [Administrativo]
-    <% collection: [Servidor Público] [Contratos] %>
+              Reposta - Para Todos  <% questão: "Obrigado pelas informações, você possui algum documento que gostaria de nos enviar? Ex. cópia de requerimento, contagem de contribuição, certidão de tempo de contribuição", selection: [Sim] [Não] %>
 
-  [Cível]
+              [Sim] => [upload-form] [câmera] => [Submit]
+              [Não] => [Submit]
 
-  [Tributário]
-
-  [Asfalto]
-
-  [Outros]
-
-
-
-
-   :telefone
-
-'Por favor digite seu telefone '
-
-<%= simple_form_for @client do |f| %>
-  <div class="form-group">
-      <div class="d-inline-flex">
-        <%= f.input :name, label: 'Nome', error: 'O nome do cliente é obrigatório' %>
-      </div>
-      <div class="d-inline-flex row-sm-10">
-        <%= f.input :lastname, label: 'Sobrenome' %>
-      </div>
-  </div>
-
-  <%= f.input :gender, label: 'Gênero', as: :radio_buttons, collection: [['Masculino', 1], ['Feminino', 2]], hint: 'Escolha o sexo',  error: 'É necessário escolher o gênero do seu cliente para o aplicativo funcionar corretamente' %>
-
-  <%= f.input :citizenship, label: 'Nacionalidade', as: :radio_buttons, collection: [["Brasileiro", "Brasileiro"], ["Estrangeiro", "Estrangeiro"]] %>
-
-  <%= f.input :civilstatus, label: 'Estado Civil', as: :check_boxes, collection: [["Casado", "Casado"], ["Solteiro", "Solteiro"], ["Divorciado", "Divorciado"], ["Viuvo", "Viuvo"], ["União Estável", "Em Uniao Estavel"]] %>
-
-  <%= f.input :capacity, hint: 'Selecione a capacidade', label: 'Capacidade', as: :radio_buttons, collection: [["Capaz", "Capaz"], ["Relativamente Incapaz", "Relativamente Incapaz"], ["Absolutamente Incapaz", "Absolutamente Incapaz"]] %>
-
-  <div class="form-group">
-    <div class="d-inline-flex">
-      <%= f.input :profession, label: 'Profissão' %>
-    </div>
-    <div class="d-inline-flex">
-      <%= f.input :company, label: 'Empresa Atual' %>
-    </div>
-    <div class="d-inline-flex">
-      <%= f.input :birth, label: 'Data de Nascimento', :as => :string, format: "%d/%m/%Y" %>
-    </div>
-    <div class="d-inline-flex">
-      <%= f.input :mothername, label: 'Nome da Mãe' %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="d-inline-flex">
-      <%= f.input :number_benefit, label: 'Número de Benefício' %>
-    </div>
-    <div class="d-inline-flex">
-      <%= f.input :general_register, label: 'Número de RG' %>
-    </div>
-    <div class="d-inline-flex">
-      <%= f.input :social_number, label: 'CPF' %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="d-inline-flex">
-      <%= f.input :zip, label: 'CEP' %>
-    </div>
-    <div class="d-inline-flex">
-    <%= f.input :adress, label: 'Endereço' %>
-    </div>
-    <div class="d-inline-flex">
-    <%= f.input :city, label: 'Cidade' %>
-    </div>
-    <div class="d-inline-flex">
-    <%= f.input :state, label: 'Estado' %>
-    </div>
-  </div>
-
-
-
-
-  <div class="form-group">
-    <div class="d-inline-flex">
-      <%= f.simple_fields_for :phones do |ph| %>
-        <%= render 'phone_fields', :f => ph %>
-      <% end %>
-    </div>
-    <div class='links'>
-      <%= link_to_add_association "Adicionar Telefone", f, :phones %>
-    </div>
-  </div>
-
-   <div class="form-group">
-    <div class="d-inline-flex">
-        <%= f.input :choice, label: 'Consulta', as: :radio_buttons , collection: [["Consulta Simples", true], ["Adicionar Trabalho", false]] %>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="d-inline-flex">
-      <%= f.button :submit, "Criar Cliente", class: "btn btn-primary" %>
-  </div>
+              [Não] => [Submit] => <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
 
 
 
 
 
-  </div>
-  <%#= yield depois com o tempo criar um yield aqui para instanciar e utilizar os campos repetidos - alterar no cabeçãlho o @ para uma variábel que corresponda ao model invocado %>
-
-
-<% end %>
 
 
 
 
+
+    [Administrativo]
+
+    1. <% collection: [Abono de Permanência] [Horas Extras e outras verbas] [Indenização por Licença Prêmio] [Outros], hint: "Escolha uma área do direito Administrativo" %>
+
+      <% questão: "Já fez algum requerimento relacionado ao seu pedido?", selection: [Sim] [Não]  %>
+
+      <% questão: "Obrigado pelas informações, você possui algum documento que gostaria de nos enviar? Ex. cópia de requerimento, contagem de contribuição, certidão de tempo de contribuição", selection: [Sim] [Não] %>
+
+        [Sim] => [upload-form] [câmera] => [Submit]
+        [Não] => [Submit]
+
+      <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
+
+
+
+
+    [Cível]
+
+
+    1. <% collection: [Família] [Consumidor] [Indenizações] [Outros], hint: "Escolha uma área do direito Cível." %>
+
+       [Família] <% collection: [Divórcio] [Alimentos] [Reconhecimento Paternidade] [Inventário] %>
+
+       [Consumidor] <% collection: [Negativação Indevida - SPC/Serasa] [Aeroporto-Linhas Aéreas] [Telefonia] [Bancos e Cartão de Crédito]
+
+       [Indenização] <% questão: "Fale um pouco mais sobre a sua indenização e/ou acidente e/ou seguro" %>
+
+
+      <% questão: "Obrigado pelas informações, você possui algum documento que gostaria de nos enviar?", selection: [Sim] [Não] %>
+
+        [Sim] => [upload-form] [câmera] => [Submit]
+        [Não] => [Submit]
+
+      <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
+
+
+
+
+
+
+
+
+    [Tributário]
+
+      [Asfalto] <% "De qual cidade você está requerendo a devolução dos valores do asfalto?" %>
+
+                <% "Qual foi o valor de cobrança?" %>
+
+                <% "Você pagou, está pagando ou não pagou as parcelas de asfalto?", selection: [Paguei] [Estou Pagando] [Não Pague] %>
+
+                <% "Qual o ano do pagamento ou do vencimento da última parcela?" %>
+
+      [Alvará Cascavel]
+                <% "Qual é o seu ramo de atividade?" %>
+
+                <% "Quanto pagou de alvará no ano de 2020?" %>
+
+      [Outros Tributos]
+                <% "Fale um pouco sobre o tributo que deseja restituir ou compensar" %>
+
+
+      --- finalização padrao ----
+      <% questão: "Obrigado pelas informações, você possui algum documento que gostaria de nos enviar?", selection: [Sim] [Não] %>
+
+        [Sim] => [upload-form] [câmera] => [Submit]
+        [Não] => [Submit]
+
+      <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
+
+
+
+    [Outros]
+
+    Apenas formulário em branco e finalizar como todos os demais ..
+
+
+
+
+
+
+
+
+
+
+[Consulta]
+
+    Online
+      <% questão: "Qual seu meio de comunicação preferido?", selection: [WhatsApp] [Facebook] [Telefone] [Zoom] [E-mail] %>  let x = selection
+      <% questão: "Por favor nos informe seu #{x}." %> *** Obrigatório
+      <% questão: "Se desejar, nos diga um pouco mais sobre a sua situação da consulta..." %>
+      <% submit: "Obrigado pelas informações, entraremos em contato em breve através do seu telefone" %>
+
+    Pessoal
+      <% questão: "Por favor informe seu telefone que entraremos em contato em breve, nosso escritório está localizado em Cascavel - Paraná." %>
+
+[Saiba-Mais]
+    Blog : https://pellizzetti.adv.br/blog/
+    História : https://pellizzetti.adv.br/advogado-previdenciario-cascavel/
