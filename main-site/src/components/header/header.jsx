@@ -11,23 +11,23 @@ const Header = () => {
                     <Ul>
                         <Li>
                             <Button
-                              onClick={onClickContact}
-                            >Contato
+                              onClick={() => window.location="/consulta"}
+                            >Consulta
                             </Button>
                         </Li>
                         <Li>
                             <Button
-                              onClick={onClickBlog}
+                              onClick={() => window.location="/home"}
                             >Blog</Button>
                         </Li>
                         <Li>
                             <Button
-                              onClick={onClickNewProcess}
+                              onClick={() => window.location="/novo-processo"}
                             >Novo Processo</Button>
                         </Li>
                         <Li>
                             <Button
-                            onClick={onClickAbout}
+                            onClick={() => window.location="/saiba-mais"}
                             >Saiba Mais</Button>
                         </Li>
 
