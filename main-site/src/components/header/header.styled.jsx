@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { createGlobalStyle } from 'styled-components';
 
+export const Hamburger = styled.div`
+  display:none;
+  @media screen and (max-width: 767px) {
+    display:block;
+  }
+`;
+
 export const HeaderContainer = styled.div`
     background-color: white;
     width: 100%;
@@ -11,16 +18,33 @@ export const HeaderNav = styled.header`
     height: 60px;
     width: 100%;
     box-shadow: 0px 8px 10px #ccc;
+    display:flex;
+    flex-direction:row; 
+    justify-content:right;
+    align-items:center;
 ;`
 
-export const Ul = styled.ul`
-    list-style: none;
-    margin-right: 100px;
+export const Container = styled.div`
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
     float: right;
-    padding-top: 9.5px;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    margin-right: 10px;
+    @media screen and (max-width: 767px) {
+      flex-direction:column;
+      display: flex;
+
+    }
 ;`
 
-export const Li = styled.li`
+export const ButtonDiv = styled.div`
     font-family: "Quicksand", sans-serif;
     font-weight: bold;
     display: inline-block;
